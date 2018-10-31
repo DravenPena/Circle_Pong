@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="profile" href="http://gmpg.org/xfn/11">
+
+<title>[Tutorial] Implementing a Minimap in Unity - The Knights of Unity</title>
+<!-- JM Twitter Cards by Julien Maury 7.9 -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@KnightsOfUnity">
+<meta name="twitter:site" content="@KnightsOfUnity">
+<meta name="twitter:title" content="[Tutorial] Implementing a Minimap in Unity">
+<meta name="twitter:description" content="What does it take to create a mini-map for a Unity game? You most probably would be surprised to hear that it&#039;s easier than you think, and that it does not even require any programming skills! Here I">
+<meta name="twitter:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/07/TKoU_logo_medium_bw.png">
+<!-- /JM Twitter Cards by Julien Maury 7.9 -->
+
+<!-- This site is optimized with the Yoast SEO plugin v5.1 - https://yoast.com/wordpress/plugins/seo/ -->
+<meta name="description" content="This tutorial will show developers how to create a depth mini-map in Unity. Implementing a minimap in Unity3D games is easier than you think!"/>
+<link rel="canonical" href="https://blog.theknightsofunity.com/implementing-minimap-unity/" />
+<link rel="publisher" href="https://plus.google.com/+Theknightsofunity3d"/>
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="[Tutorial] Implementing a Minimap in Unity - The Knights of Unity" />
+<meta property="og:description" content="This tutorial will show developers how to create a depth mini-map in Unity. Implementing a minimap in Unity3D games is easier than you think!" />
+<meta property="og:url" content="https://blog.theknightsofunity.com/implementing-minimap-unity/" />
+<meta property="og:site_name" content="The Knights of Unity" />
+<meta property="article:publisher" content="https://www.facebook.com/TheKnightsofUnity/" />
+<meta property="article:tag" content="Graphics" />
+<meta property="article:tag" content="GUI" />
+<meta property="article:tag" content="Tutorial" />
+<meta property="article:section" content="Tutorial" />
+<meta property="article:published_time" content="2016-04-12T18:48:14+01:00" />
+<meta property="article:modified_time" content="2017-12-07T20:21:38+01:00" />
+<meta property="og:updated_time" content="2017-12-07T20:21:38+01:00" />
+<meta property="fb:admins" content="100005236262385" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/Minimap-4_1_0.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-2.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-3.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-4.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-5.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-6.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-7.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-8.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-9.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/c8a8f9a2-7aa6-4d1e-9057-963f8387b8b4.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/236e68ff-bcce-4187-8935-096f92071dd4.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/a16cf4a1-3b99-445e-8e9b-5dfdad96f232.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/36997a54-6acd-4464-8722-6d25f5eda3b6.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/350efe19-0843-4c7a-9b1d-0b0026f10aef.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/c32cc817-c9eb-490b-a730-8b25b38df6e3.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/af4f8370-22cc-4735-aa8b-310aacf24646.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/0f762c1f-bc89-4dd7-af2e-04b11abe7520.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/c57d0c80-c9e3-42b4-9a0d-6efa9d7a68ca.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/5b252849-280c-4322-9115-7e20fb71de52.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/da459b5f-c6ad-4217-a2e8-938f418535b7.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/3b117f6d-153f-4df6-a96c-51487c410209.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/0680218f-0e76-47b6-ad53-944585f89395.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/d41a30b5-be01-4aa6-9e66-db363342f979.png" />
+<meta property="og:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/8e744555-ae16-46d8-8b15-46f405ff2290.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:description" content="This tutorial will show developers how to create a depth mini-map in Unity. Implementing a minimap in Unity3D games is easier than you think!" />
+<meta name="twitter:title" content="[Tutorial] Implementing a Minimap in Unity - The Knights of Unity" />
+<meta name="twitter:site" content="@KnightsOfUnity" />
+<meta name="twitter:image" content="http://blog.theknightsofunity.com/wp-content/uploads/2016/04/Minimap-4_1_0.png" />
+<meta name="twitter:creator" content="@KnightsOfUnity" />
+<!-- / Yoast SEO plugin. -->
+
+<link rel='dns-prefetch' href='//s0.wp.com' />
+<link rel='dns-prefetch' href='//secure.gravatar.com' />
+<link rel='dns-prefetch' href='//platform-api.sharethis.com' />
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="The Knights of Unity &raquo; Feed" href="https://blog.theknightsofunity.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="The Knights of Unity &raquo; Comments Feed" href="https://blog.theknightsofunity.com/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="The Knights of Unity &raquo; [Tutorial] Implementing a Minimap in Unity Comments Feed" href="https://blog.theknightsofunity.com/implementing-minimap-unity/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blog.theknightsofunity.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.8"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56760,9792,65039],[55358,56760,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='crayon-css'  href='https://blog.theknightsofunity.com/wp-content/plugins/crayon-syntax-highlighter/css/min/crayon.min.css?ver=_2.7.2_beta' type='text/css' media='all' />
+<link rel='stylesheet' id='math-captcha-frontend-css'  href='https://blog.theknightsofunity.com/wp-content/plugins/wp-math-captcha/css/frontend.css?ver=4.9.8' type='text/css' media='all' />
+<link rel='stylesheet' id='zthemes-googlefonts-css'  href='https://fonts.googleapis.com/css?family=Lato%3A400%2C400i%2C700%7CMontserrat%3A400%2C400i%2C500%2C600%2C700&#038;subset=latin%2Clatin-ext' type='text/css' media='all' />
+<link rel='stylesheet' id='kokoro-style-css'  href='https://blog.theknightsofunity.com/wp-content/themes/kokoro/style.css?ver=4.9.8' type='text/css' media='all' />
+<style id='kokoro-style-inline-css' type='text/css'>
+
+a {
+    color: #be9c62;
+}
+.entry-cate a {
+	background-color: #be9c62;
+}
+.widget-title {
+	border-color: #be9c62;
+}
+.entry-tags a:hover {
+	background-color: #be9c62;
+}
+time.entry-date:hover{
+  color: #be9c62;
+}
+.entry-more a:hover {
+  background-color: #be9c62;
+  border-color: #be9c62;
+}
+
+
+</style>
+<link rel='stylesheet' id='kokoro-font-awesome-css-css'  href='https://blog.theknightsofunity.com/wp-content/themes/kokoro/css/font-awesome.min.css?ver=4.9.8' type='text/css' media='all' />
+<link rel='stylesheet' id='meks-author-widget-css'  href='https://blog.theknightsofunity.com/wp-content/plugins/meks-smart-author-widget/css/style.css?ver=1.1.1' type='text/css' media='all' />
+<!-- Inline jetpack_facebook_likebox -->
+<style id='jetpack_facebook_likebox-inline-css' type='text/css'>
+.widget_facebook_likebox {
+	overflow: hidden;
+}
+
+</style>
+<link rel='stylesheet' id='newsletter-subscription-css'  href='https://blog.theknightsofunity.com/wp-content/plugins/newsletter/subscription/style.css?ver=5.0.1' type='text/css' media='all' />
+<link rel='stylesheet' id='__EPYT__style-css'  href='https://blog.theknightsofunity.com/wp-content/plugins/youtube-embed-plus/styles/ytprefs.min.css?ver=4.9.8' type='text/css' media='all' />
+<style id='__EPYT__style-inline-css' type='text/css'>
+
+                .epyt-gallery-thumb {
+                        width: 33.333%;
+                }
+                
+</style>
+<link rel='stylesheet' id='jetpack_css-css'  href='https://blog.theknightsofunity.com/wp-content/plugins/jetpack/css/jetpack.css?ver=5.1' type='text/css' media='all' />
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-content/plugins/wp-gfycat/js/gfycat_test_.js?ver=4.9.8'></script>
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-includes/js/jquery/jquery.js?ver=1.12.4'></script>
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var related_posts_js_options = {"post_heading":"h4"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-content/plugins/jetpack/modules/related-posts/related-posts.js?ver=20150408'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var CrayonSyntaxSettings = {"version":"_2.7.2_beta","is_admin":"0","ajaxurl":"https:\/\/blog.theknightsofunity.com\/wp-admin\/admin-ajax.php","prefix":"crayon-","setting":"crayon-setting","selected":"crayon-setting-selected","changed":"crayon-setting-changed","special":"crayon-setting-special","orig_value":"data-orig-value","debug":""};
+var CrayonSyntaxStrings = {"copy":"Press %s to Copy, %s to Paste","minimize":"Click To Expand Code"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-content/plugins/crayon-syntax-highlighter/js/min/crayon.min.js?ver=_2.7.2_beta'></script>
+<script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#product=ga&#038;property=59156388cc332e0012ea6a9a'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var _EPYT_ = {"ajaxurl":"https:\/\/blog.theknightsofunity.com\/wp-admin\/admin-ajax.php","security":"15b20de51b","gallery_scrolloffset":"20","eppathtoscripts":"https:\/\/blog.theknightsofunity.com\/wp-content\/plugins\/youtube-embed-plus\/scripts\/","epresponsiveselector":"[\"iframe.__youtube_prefs_widget__\"]","epdovol":"1","version":"11.8.2","evselector":"iframe.__youtube_prefs__[src], iframe[src*=\"youtube.com\/embed\/\"], iframe[src*=\"youtube-nocookie.com\/embed\/\"]","ajax_compat":"","stopMobileBuffer":"1"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-content/plugins/youtube-embed-plus/scripts/ytprefs.min.js?ver=4.9.8'></script>
+<link rel='https://api.w.org/' href='https://blog.theknightsofunity.com/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blog.theknightsofunity.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blog.theknightsofunity.com/wp-includes/wlwmanifest.xml" /> 
+<meta name="generator" content="WordPress 4.9.8" />
+<link rel='shortlink' href='https://wp.me/p6cX0W-8C' />
+<link rel="alternate" type="application/json+oembed" href="https://blog.theknightsofunity.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fblog.theknightsofunity.com%2Fimplementing-minimap-unity%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://blog.theknightsofunity.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fblog.theknightsofunity.com%2Fimplementing-minimap-unity%2F&#038;format=xml" />
+
+<link rel='dns-prefetch' href='//v0.wordpress.com'>
+<link rel='dns-prefetch' href='//i0.wp.com'>
+<link rel='dns-prefetch' href='//i1.wp.com'>
+<link rel='dns-prefetch' href='//i2.wp.com'>
+<style type='text/css'>img#wpstats{display:none}</style><meta name="generator" content="Powered by Visual Composer - drag and drop page builder for WordPress."/>
+<!--[if lte IE 9]><link rel="stylesheet" type="text/css" href="https://blog.theknightsofunity.com/wp-content/plugins/js_composer/assets/css/vc_lte_ie9.min.css" media="screen"><![endif]--><link rel="icon" href="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2018/06/logo.png?fit=32%2C32&#038;ssl=1" sizes="32x32" />
+<link rel="icon" href="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2018/06/logo.png?fit=32%2C32&#038;ssl=1" sizes="192x192" />
+<link rel="apple-touch-icon-precomposed" href="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2018/06/logo.png?fit=32%2C32&#038;ssl=1" />
+<meta name="msapplication-TileImage" content="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2018/06/logo.png?fit=32%2C32&#038;ssl=1" />
+			<style type="text/css" id="wp-custom-css">
+				figcaption {
+	color: #999;
+	font-style: italic;
+	font-size: 0.9em;
+}
+
+figure img
+{
+	border: 2px solid;
+	border-color: #eee;
+}
+
+h1.site-title {
+	font-variant: small-caps;
+	line-height: 0.8em;
+	font-weight: bold;
+	letter-spacing: -1px;
+	text-transform: none;
+}
+
+h1.site-title a {
+	border-bottom: 1px solid;
+	border-color: #eee;
+	color: #333;
+}
+
+.widget-title {
+	background-color: #be9c62;
+	border-radius: 2px;
+	color: #fff;	
+}
+
+.widget-title a {
+	color: #fff;
+}
+
+.widget {
+	border-top: 1px solid;
+	border-color: #f5f5f5;
+	padding: 20px;
+}			</style>
+		<style id="tt-easy-google-font-styles" type="text/css">p { }
+h1 { }
+h2 { }
+h3 { }
+h4 { }
+h5 { }
+h6 { }
+</style><noscript><style type="text/css"> .wpb_animate_when_almost_visible { opacity: 1; }</style></noscript></head>
+
+<body class="post-template-default single single-post postid-534 single-format-standard group-blog wpb-js-composer js-comp-ver-5.1.1 vc_responsive">
+<div id="page" class="site">
+	<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+
+	<header id="masthead" class="site-header" role="banner">
+		<nav id="site-navigation" class="main-navigation2 top-nav-kokoro" role="navigation">
+			<div class="top-nav container">
+				
+				<div class="menu-hire-us-container"><ul id="top-menu" class="menu"><li id="menu-item-1277" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1277"><a href="http://theknightsofunity.com/#contact">HIRE US &#8211; WE ARE HERE FOR YOU!</a></li>
+</ul></div>
+				<div id="top-social">
+					
+					<a href="https://www.facebook.com/TheKnightsofUnity/" target="_blank"><i class="fa fa-facebook"></i></a>					<a href="https://twitter.com/knightsofunity" target="_blank"><i class="fa fa-twitter"></i></a>																														<a href="https://www.youtube.com/channel/UCHQ2RXXPrkMmigJoeN_y2cg" target="_blank"><i class="fa fa-youtube-play"></i></a>
+																				<a href="https://www.linkedin.com/company/10081463/" target="_blank"><i class="fa fa-linkedin"></i></a>										
+				</div>
+			</div>
+		</nav><!-- #site-navigation -->
+
+		<div class="site-branding container">
+
+			
+				<h1 class="site-title"><a href="https://blog.theknightsofunity.com/" rel="home">The Knights of Unity</a></h1>
+
+										<p class="site-description">Blog of Knowledge</p>
+				
+			
+		</div><!-- .site-branding -->
+
+		<!-- #main-menu -->
+		<nav class="main-navigation" id="main-nav">
+		<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false">
+			<span class="m_menu_icon"></span>
+			<span class="m_menu_icon"></span>
+			<span class="m_menu_icon"></span>
+		</button>
+		<div class="menu-menu-blog-container"><ul id="primary-menu" class="nav-menu menu"><li id="menu-item-1330" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1330"><a href="https://blog.theknightsofunity.com/knowledge-library/">Knowledge Library</a></li>
+<li id="menu-item-1317" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1317"><a target="_blank" href="https://www.theknightsofunity.com/about-us">About US</a></li>
+<li id="menu-item-1745" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1745"><a target="_blank" href="https://www.theknightsofunity.com/career">Careers</a></li>
+<li id="menu-item-1290" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1290"><a target="_blank" href="https://www.theknightsofunity.com/contact">Contact</a></li>
+</ul></div>		</nav>
+
+	</header><!-- #masthead -->
+
+	<div id="content" class="site-content">
+
+	<div id="primary" class="content-area container">
+		<main id="main" class="site-main " role="main">
+
+		
+<article id="post-534" class="post-534 post type-post status-publish format-standard hentry category-tutorial tag-graphics tag-gui tag-tutorial">
+
+	
+	
+	<header class="entry-header">
+		<div class="entry-box">
+			<span class="entry-cate"><a href="https://blog.theknightsofunity.com/category/tutorial/" rel="category tag">Tutorial</a></span>
+			
+						<span class="entry-meta"><span class="posted-on"> <a href="https://blog.theknightsofunity.com/implementing-minimap-unity/" rel="bookmark"><time class="entry-date published" datetime="2016-04-12T18:48:14+00:00">April 12, 2016</time><time class="updated" datetime="2017-12-07T20:21:38+00:00">December 7, 2017</time></a></span><span class="byline"> by <span class="author vcard"><a class="url fn n" href="https://blog.theknightsofunity.com/author/piotrkorzuszek/">Piotr Korzuszek</a></span></span></span>
+			
+		</div>
+		<h1 class="entry-title">[Tutorial] Implementing a Minimap in Unity</h1>		
+				<span class="title-divider"></span>
+	</header><!-- .entry-header -->
+
+	
+	<div class="entry-content">
+		<p>What does it take to create a mini-map for a Unity game? You most probably would be surprised to hear that it&#8217;s easier than you think, and that it does not even require any programming skills! Here I will try to explain how to make one step by step.</p>
+<h2>Basic minimap concepts</h2>
+<p><img data-attachment-id="537" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/minimap-4_1_0/" data-orig-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/Minimap-4_1_0.png?fit=205%2C195&amp;ssl=1" data-orig-size="205,195" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="WoW Minimap" data-image-description="" data-medium-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/Minimap-4_1_0.png?fit=205%2C195&amp;ssl=1" data-large-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/Minimap-4_1_0.png?fit=205%2C195&amp;ssl=1" class="alignright size-full wp-image-537" src="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/Minimap-4_1_0.png?resize=205%2C195" alt="Minimap known from World of Warcraft" data-recalc-dims="1" />Minimaps (or radars) are known for displaying information about our surroundings. First of all, mini-maps should be centered on main character. Secondly, it should use readable symbols instead of real models because minimaps are often quite small and the player wouldn&#8217;t recognize the information that the minimap is trying to present.</p>
+<p>Most minimaps are circular, so we will also try to create one. Quite often you will find additional buttons and labels attached to it. That&#8217;s what we will try to recreate too.</p>
+<h2>Preparing the scene</h2>
+<p>Let&#8217;s start with adding something to the scene. I&#8217;ve created a new scene with <a href="https://www.assetstore.unity3d.com/en/#!/content/18705">Unity Chan</a> (she will be the player) and two <a href="https://www.assetstore.unity3d.com/en/#!/content/4696">robots</a> (as enemies).</p>
+<figure id="attachment_540" style="width: 948px" class="wp-caption aligncenter"><img data-attachment-id="540" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/desktop-14/" data-orig-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-2.png?fit=948%2C581&amp;ssl=1" data-orig-size="948,581" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="desktop" data-image-description="" data-medium-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-2.png?fit=300%2C184&amp;ssl=1" data-large-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-2.png?fit=640%2C392&amp;ssl=1" class="wp-image-540 size-full" src="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-2.png?resize=640%2C392" alt="desktop" srcset="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-2.png?w=948&amp;ssl=1 948w, https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-2.png?resize=300%2C184&amp;ssl=1 300w, https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-2.png?resize=768%2C471&amp;ssl=1 768w, https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-2.png?resize=770%2C472&amp;ssl=1 770w" sizes="(max-width: 640px) 100vw, 640px" data-recalc-dims="1" /><figcaption class="wp-caption-text">Game view</figcaption></figure>
+<p>Now let&#8217;s add a second camera. Just click on <em>GameObject -&gt; Camera</em> and rename it to <em>Minimap Camera</em>. Then make this camera a child of <em>Unity Chan</em> model (so it will follow her) and move it 10 units above her head looking down.</p>
+<figure id="attachment_543" style="width: 490px" class="wp-caption aligncenter"><img data-attachment-id="543" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/desktop-15/" data-orig-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-3.png?fit=490%2C236&amp;ssl=1" data-orig-size="490,236" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="minimap camera setup" data-image-description="" data-medium-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-3.png?fit=300%2C144&amp;ssl=1" data-large-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-3.png?fit=490%2C236&amp;ssl=1" class="size-full wp-image-543" src="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-3.png?resize=490%2C236" alt="Minimap Camera Setup" srcset="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-3.png?w=490&amp;ssl=1 490w, https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-3.png?resize=300%2C144&amp;ssl=1 300w" sizes="(max-width: 490px) 100vw, 490px" data-recalc-dims="1" /><figcaption class="wp-caption-text">Minimap Camera Setup</figcaption></figure>
+<p>For good effect set <em>Transform </em>position to<em> 0, 10, 0</em> and rotation to<em> 90, 0, 0. The camera should be seeing something like this:</em></p>
+<p><img data-attachment-id="544" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/desktop-16/" data-orig-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-4.png?fit=214%2C150&amp;ssl=1" data-orig-size="214,150" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="minimap camera preview" data-image-description="" data-medium-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-4.png?fit=214%2C150&amp;ssl=1" data-large-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-4.png?fit=214%2C150&amp;ssl=1" class="aligncenter size-full wp-image-544" src="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-4.png?resize=214%2C150" alt="minimap camera preview" data-recalc-dims="1" /></p>
+<p>OK, but that&#8217;s not a minimap yet. When you will launch your scene now, the picture from the camera above will be the only one rendered on the screen. We have to tell the game that we want the minimap to be a Unity UI element.</p>
+<h2>Rendering to Unity UI</h2>
+<p>To do that we will require a <em><a href="http://docs.unity3d.com/Manual/class-RenderTexture.html">Render Texture</a></em>. You can easily create one by choosing <em>Assets -&gt; Create -&gt; Render Texture</em> from the main menu. Create and rename it to <em>Minimap Render Texture</em>.</p>
+<p><img data-attachment-id="545" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/desktop-17/" data-orig-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-5.png?fit=230%2C42&amp;ssl=1" data-orig-size="230,42" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="minimap render texture" data-image-description="" data-medium-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-5.png?fit=230%2C42&amp;ssl=1" data-large-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-5.png?fit=230%2C42&amp;ssl=1" class="aligncenter size-full wp-image-545" src="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-5.png?resize=230%2C42" alt="minimap render texture" data-recalc-dims="1" /></p>
+<p>Now select <em>Minimap Camera</em> and in the <em>Inspector</em> assign <em>Minimap Render Texture</em> to <em>Target Texture</em> field.</p>
+<p><img data-attachment-id="546" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/desktop-18/" data-orig-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-6.png?fit=343%2C106&amp;ssl=1" data-orig-size="343,106" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="camera assign render texture minimap" data-image-description="" data-medium-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-6.png?fit=300%2C93&amp;ssl=1" data-large-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-6.png?fit=343%2C106&amp;ssl=1" class="aligncenter size-full wp-image-546" src="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-6.png?resize=343%2C106" alt="camera assign render texture minimap" srcset="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-6.png?w=343&amp;ssl=1 343w, https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-6.png?resize=300%2C93&amp;ssl=1 300w" sizes="(max-width: 343px) 100vw, 343px" data-recalc-dims="1" /></p>
+<p>If you will try to launch the scene you will notice that <em>Minimap Camera</em> picture is nowhere to be seen. The result image is now hidden in our newly created render texture.</p>
+<p>Let&#8217;s now create a <em>Canvas </em>to add UI elements on it. Choose <em>GameObject -&gt; UI -&gt; Canvas</em> and you will be able to find one on your scene.</p>
+<p><img data-attachment-id="547" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/desktop-19/" data-orig-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-7.png?fit=224%2C60&amp;ssl=1" data-orig-size="224,60" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="created canvas" data-image-description="" data-medium-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-7.png?fit=224%2C60&amp;ssl=1" data-large-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-7.png?fit=224%2C60&amp;ssl=1" class="aligncenter size-full wp-image-547" src="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-7.png?resize=224%2C60" alt="created canvas" data-recalc-dims="1" /></p>
+<p><em>Canvas</em> would require a <em>Raw Image</em> to use <em>Render Texture</em> on it. Select <em>GameObject -&gt; UI -&gt; Raw Image</em>, rename it to <em>Minimap Image</em> and in its inspector assign <em>Minimap Render Texture</em> into a <em>Texture</em> field.</p>
+<p><img data-attachment-id="549" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/desktop-20/" data-orig-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-8.png?fit=563%2C432&amp;ssl=1" data-orig-size="563,432" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="raw image render texture" data-image-description="" data-medium-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-8.png?fit=300%2C230&amp;ssl=1" data-large-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-8.png?fit=563%2C432&amp;ssl=1" class="aligncenter size-full wp-image-549" src="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-8.png?resize=563%2C432" alt="raw image render texture" srcset="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-8.png?w=563&amp;ssl=1 563w, https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-8.png?resize=300%2C230&amp;ssl=1 300w" sizes="(max-width: 563px) 100vw, 563px" data-recalc-dims="1" /></p>
+<p>It will result with a Unity UI element that now renders <em>Minimap Camera</em> image in it!</p>
+<p><img data-attachment-id="550" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/desktop-21/" data-orig-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-9.png?fit=401%2C392&amp;ssl=1" data-orig-size="401,392" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="raw minimap unity ui" data-image-description="" data-medium-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-9.png?fit=300%2C293&amp;ssl=1" data-large-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-9.png?fit=401%2C392&amp;ssl=1" class="aligncenter size-full wp-image-550" src="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-9.png?resize=401%2C392" alt="raw minimap unity ui" srcset="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-9.png?w=401&amp;ssl=1 401w, https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop-9.png?resize=300%2C293&amp;ssl=1 300w" sizes="(max-width: 401px) 100vw, 401px" data-recalc-dims="1" /></p>
+<p>Now let&#8217;s make it round. For this purpose I made a simple mask texture:</p>
+<p><img data-attachment-id="551" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/c8a8f9a2-7aa6-4d1e-9057-963f8387b8b4/" data-orig-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c8a8f9a2-7aa6-4d1e-9057-963f8387b8b4.png?fit=276%2C276&amp;ssl=1" data-orig-size="276,276" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="minimap masl" data-image-description="" data-medium-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c8a8f9a2-7aa6-4d1e-9057-963f8387b8b4.png?fit=276%2C276&amp;ssl=1" data-large-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c8a8f9a2-7aa6-4d1e-9057-963f8387b8b4.png?fit=276%2C276&amp;ssl=1" class="aligncenter size-full wp-image-551" src="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c8a8f9a2-7aa6-4d1e-9057-963f8387b8b4.png?resize=276%2C276" alt="minimap masl" srcset="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c8a8f9a2-7aa6-4d1e-9057-963f8387b8b4.png?w=276&amp;ssl=1 276w, https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c8a8f9a2-7aa6-4d1e-9057-963f8387b8b4.png?resize=150%2C150&amp;ssl=1 150w" sizes="(max-width: 276px) 100vw, 276px" data-recalc-dims="1" /></p>
+<p>Create a new Unity UI image, add <em>Mask</em> component to it, set our new mask texture to <em>Source Image</em> inspector field, and make <em>Minimap Image</em> a child of our <em>Mask</em>. (Tip: disable Mipmaps for mask textures to get a better visual effect).</p>
+<p><img data-attachment-id="552" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/236e68ff-bcce-4187-8935-096f92071dd4/" data-orig-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/236e68ff-bcce-4187-8935-096f92071dd4.png?fit=557%2C369&amp;ssl=1" data-orig-size="557,369" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="minimap mask configuration" data-image-description="" data-medium-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/236e68ff-bcce-4187-8935-096f92071dd4.png?fit=300%2C199&amp;ssl=1" data-large-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/236e68ff-bcce-4187-8935-096f92071dd4.png?fit=557%2C369&amp;ssl=1" class="aligncenter size-full wp-image-552" src="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/236e68ff-bcce-4187-8935-096f92071dd4.png?resize=557%2C369" alt="minimap mask configuration" srcset="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/236e68ff-bcce-4187-8935-096f92071dd4.png?w=557&amp;ssl=1 557w, https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/236e68ff-bcce-4187-8935-096f92071dd4.png?resize=300%2C199&amp;ssl=1 300w" sizes="(max-width: 557px) 100vw, 557px" data-recalc-dims="1" /></p>
+<p>This setup will make our minimap look like this:</p>
+<p><img data-attachment-id="553" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/a16cf4a1-3b99-445e-8e9b-5dfdad96f232/" data-orig-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/a16cf4a1-3b99-445e-8e9b-5dfdad96f232.png?fit=307%2C287&amp;ssl=1" data-orig-size="307,287" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="minimap masked circle" data-image-description="" data-medium-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/a16cf4a1-3b99-445e-8e9b-5dfdad96f232.png?fit=300%2C280&amp;ssl=1" data-large-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/a16cf4a1-3b99-445e-8e9b-5dfdad96f232.png?fit=307%2C287&amp;ssl=1" class="aligncenter size-full wp-image-553" src="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/a16cf4a1-3b99-445e-8e9b-5dfdad96f232.png?resize=307%2C287" alt="minimap masked circle" srcset="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/a16cf4a1-3b99-445e-8e9b-5dfdad96f232.png?w=307&amp;ssl=1 307w, https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/a16cf4a1-3b99-445e-8e9b-5dfdad96f232.png?resize=300%2C280&amp;ssl=1 300w" sizes="(max-width: 307px) 100vw, 307px" data-recalc-dims="1" /></p>
+<p>White minimap on white background will not look so good. Let&#8217;s add a border image over it:</p>
+<p><img data-attachment-id="554" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/36997a54-6acd-4464-8722-6d25f5eda3b6/" data-orig-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/36997a54-6acd-4464-8722-6d25f5eda3b6.png?fit=285%2C282&amp;ssl=1" data-orig-size="285,282" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="minimap border" data-image-description="" data-medium-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/36997a54-6acd-4464-8722-6d25f5eda3b6.png?fit=285%2C282&amp;ssl=1" data-large-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/36997a54-6acd-4464-8722-6d25f5eda3b6.png?fit=285%2C282&amp;ssl=1" class="aligncenter size-full wp-image-554" src="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/36997a54-6acd-4464-8722-6d25f5eda3b6.png?resize=285%2C282" alt="minimap border" data-recalc-dims="1" /></p>
+<p><img data-attachment-id="555" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/350efe19-0843-4c7a-9b1d-0b0026f10aef/" data-orig-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/350efe19-0843-4c7a-9b1d-0b0026f10aef.png?fit=398%2C390&amp;ssl=1" data-orig-size="398,390" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="minimap with border" data-image-description="" data-medium-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/350efe19-0843-4c7a-9b1d-0b0026f10aef.png?fit=300%2C294&amp;ssl=1" data-large-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/350efe19-0843-4c7a-9b1d-0b0026f10aef.png?fit=398%2C390&amp;ssl=1" class="aligncenter size-full wp-image-555" src="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/350efe19-0843-4c7a-9b1d-0b0026f10aef.png?resize=398%2C390" alt="minimap with border" srcset="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/350efe19-0843-4c7a-9b1d-0b0026f10aef.png?w=398&amp;ssl=1 398w, https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/350efe19-0843-4c7a-9b1d-0b0026f10aef.png?resize=300%2C294&amp;ssl=1 300w" sizes="(max-width: 398px) 100vw, 398px" data-recalc-dims="1" /></p>
+<p>To make moving it around simpler, I&#8217;ve grouped everything under empty game object called <em>Minimap</em>.</p>
+<p><img data-attachment-id="556" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/c32cc817-c9eb-490b-a730-8b25b38df6e3/" data-orig-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c32cc817-c9eb-490b-a730-8b25b38df6e3.png?fit=566%2C277&amp;ssl=1" data-orig-size="566,277" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="minimap game object" data-image-description="" data-medium-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c32cc817-c9eb-490b-a730-8b25b38df6e3.png?fit=300%2C147&amp;ssl=1" data-large-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c32cc817-c9eb-490b-a730-8b25b38df6e3.png?fit=566%2C277&amp;ssl=1" class="aligncenter size-full wp-image-556" src="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c32cc817-c9eb-490b-a730-8b25b38df6e3.png?resize=566%2C277" alt="minimap game object" srcset="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c32cc817-c9eb-490b-a730-8b25b38df6e3.png?w=566&amp;ssl=1 566w, https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c32cc817-c9eb-490b-a730-8b25b38df6e3.png?resize=300%2C147&amp;ssl=1 300w" sizes="(max-width: 566px) 100vw, 566px" data-recalc-dims="1" /></p>
+<p>Finally let&#8217;s move our new minimap to top-right corner of the screen.</p>
+<p><img data-attachment-id="557" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/af4f8370-22cc-4735-aa8b-310aacf24646/" data-orig-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/af4f8370-22cc-4735-aa8b-310aacf24646.png?fit=872%2C583&amp;ssl=1" data-orig-size="872,583" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="minimap top-right corner" data-image-description="" data-medium-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/af4f8370-22cc-4735-aa8b-310aacf24646.png?fit=300%2C201&amp;ssl=1" data-large-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/af4f8370-22cc-4735-aa8b-310aacf24646.png?fit=640%2C428&amp;ssl=1" class="aligncenter size-full wp-image-557" src="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/af4f8370-22cc-4735-aa8b-310aacf24646.png?resize=640%2C428" alt="minimap top-right corner" srcset="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/af4f8370-22cc-4735-aa8b-310aacf24646.png?w=872&amp;ssl=1 872w, https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/af4f8370-22cc-4735-aa8b-310aacf24646.png?resize=300%2C201&amp;ssl=1 300w, https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/af4f8370-22cc-4735-aa8b-310aacf24646.png?resize=768%2C513&amp;ssl=1 768w, https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/af4f8370-22cc-4735-aa8b-310aacf24646.png?resize=770%2C515&amp;ssl=1 770w" sizes="(max-width: 640px) 100vw, 640px" data-recalc-dims="1" /></p>
+<p>Looks nice, doesn&#8217;t it? But it is still not a valid minimap just, it&#8217;s a camera rendering game from the top. If you&#8217;re familiar with layers then most probably you know what I will do next!</p>
+<h2>Fun with layers</h2>
+<p>We will need at least one additional layer. Go to Edit -&gt; Project Settings -&gt; Tags and Layers and add a new layer caller <em>Minimap</em>.</p>
+<p><img data-attachment-id="538" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/desktop-12/" data-orig-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop.png?fit=283%2C357&amp;ssl=1" data-orig-size="283,357" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="layers minimap" data-image-description="" data-medium-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop.png?fit=238%2C300&amp;ssl=1" data-large-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop.png?fit=283%2C357&amp;ssl=1" class="aligncenter size-full wp-image-538" src="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop.png?resize=283%2C357" alt="layers minimap" srcset="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop.png?w=283&amp;ssl=1 283w, https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/desktop.png?resize=238%2C300&amp;ssl=1 238w" sizes="(max-width: 283px) 100vw, 283px" data-recalc-dims="1" /></p>
+<p>Now lets create three spheres. One will be blue and should be located in the same place where Unity Chan is standing. The best would be to make this object a child of Unity Chan. Finally make sure to set its <em>Layer</em> to <em>Minimap</em>.</p>
+<p><img data-attachment-id="558" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/0f762c1f-bc89-4dd7-af2e-04b11abe7520/" data-orig-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/0f762c1f-bc89-4dd7-af2e-04b11abe7520.png?fit=880%2C465&amp;ssl=1" data-orig-size="880,465" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="unity chan blue sphere" data-image-description="" data-medium-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/0f762c1f-bc89-4dd7-af2e-04b11abe7520.png?fit=300%2C159&amp;ssl=1" data-large-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/0f762c1f-bc89-4dd7-af2e-04b11abe7520.png?fit=640%2C338&amp;ssl=1" class="aligncenter size-full wp-image-558" src="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/0f762c1f-bc89-4dd7-af2e-04b11abe7520.png?resize=640%2C338" alt="unity chan blue sphere" srcset="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/0f762c1f-bc89-4dd7-af2e-04b11abe7520.png?w=880&amp;ssl=1 880w, https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/0f762c1f-bc89-4dd7-af2e-04b11abe7520.png?resize=300%2C159&amp;ssl=1 300w, https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/0f762c1f-bc89-4dd7-af2e-04b11abe7520.png?resize=768%2C406&amp;ssl=1 768w, https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/0f762c1f-bc89-4dd7-af2e-04b11abe7520.png?resize=770%2C407&amp;ssl=1 770w" sizes="(max-width: 640px) 100vw, 640px" data-recalc-dims="1" /></p>
+<p>Do the similar for two Robots, but instead of blue sphere make them red!</p>
+<p><img data-attachment-id="559" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/c57d0c80-c9e3-42b4-9a0d-6efa9d7a68ca/" data-orig-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c57d0c80-c9e3-42b4-9a0d-6efa9d7a68ca.png?fit=1009%2C531&amp;ssl=1" data-orig-size="1009,531" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="robot red spheres" data-image-description="" data-medium-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c57d0c80-c9e3-42b4-9a0d-6efa9d7a68ca.png?fit=300%2C158&amp;ssl=1" data-large-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c57d0c80-c9e3-42b4-9a0d-6efa9d7a68ca.png?fit=640%2C337&amp;ssl=1" class="aligncenter size-full wp-image-559" src="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c57d0c80-c9e3-42b4-9a0d-6efa9d7a68ca.png?resize=640%2C337" alt="robot red spheres" srcset="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c57d0c80-c9e3-42b4-9a0d-6efa9d7a68ca.png?w=1009&amp;ssl=1 1009w, https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c57d0c80-c9e3-42b4-9a0d-6efa9d7a68ca.png?resize=300%2C158&amp;ssl=1 300w, https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c57d0c80-c9e3-42b4-9a0d-6efa9d7a68ca.png?resize=768%2C404&amp;ssl=1 768w, https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/c57d0c80-c9e3-42b4-9a0d-6efa9d7a68ca.png?resize=770%2C405&amp;ssl=1 770w" sizes="(max-width: 640px) 100vw, 640px" data-recalc-dims="1" /></p>
+<p>Now is the best part! Select the <em>Main Camera</em> and make sure than its <em>Culling Mask</em> has <em>Minimap</em> layer unset.</p>
+<p><img data-attachment-id="560" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/5b252849-280c-4322-9115-7e20fb71de52/" data-orig-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/5b252849-280c-4322-9115-7e20fb71de52.png?fit=221%2C280&amp;ssl=1" data-orig-size="221,280" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="5b252849-280c-4322-9115-7e20fb71de52" data-image-description="" data-medium-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/5b252849-280c-4322-9115-7e20fb71de52.png?fit=221%2C280&amp;ssl=1" data-large-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/5b252849-280c-4322-9115-7e20fb71de52.png?fit=221%2C280&amp;ssl=1" class="aligncenter size-full wp-image-560" src="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/5b252849-280c-4322-9115-7e20fb71de52.png?resize=221%2C280" alt="5b252849-280c-4322-9115-7e20fb71de52" data-recalc-dims="1" /></p>
+<p>Then select the <em>Minimap Camera</em> and do the opposite. Leave only <em>Minimap</em> set and disable all the rest.</p>
+<p><img data-attachment-id="561" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/da459b5f-c6ad-4217-a2e8-938f418535b7/" data-orig-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/da459b5f-c6ad-4217-a2e8-938f418535b7.png?fit=384%2C325&amp;ssl=1" data-orig-size="384,325" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="minimap camera layers" data-image-description="" data-medium-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/da459b5f-c6ad-4217-a2e8-938f418535b7.png?fit=300%2C254&amp;ssl=1" data-large-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/da459b5f-c6ad-4217-a2e8-938f418535b7.png?fit=384%2C325&amp;ssl=1" class="aligncenter size-full wp-image-561" src="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/da459b5f-c6ad-4217-a2e8-938f418535b7.png?resize=384%2C325" alt="minimap camera layers" srcset="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/da459b5f-c6ad-4217-a2e8-938f418535b7.png?w=384&amp;ssl=1 384w, https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/da459b5f-c6ad-4217-a2e8-938f418535b7.png?resize=300%2C254&amp;ssl=1 300w" sizes="(max-width: 384px) 100vw, 384px" data-recalc-dims="1" /></p>
+<p>Now you can see something that looks quite like a valid minimap!</p>
+<p><img data-attachment-id="562" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/3b117f6d-153f-4df6-a96c-51487c410209/" data-orig-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/3b117f6d-153f-4df6-a96c-51487c410209.png?fit=870%2C578&amp;ssl=1" data-orig-size="870,578" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="3b117f6d-153f-4df6-a96c-51487c410209" data-image-description="" data-medium-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/3b117f6d-153f-4df6-a96c-51487c410209.png?fit=300%2C199&amp;ssl=1" data-large-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/3b117f6d-153f-4df6-a96c-51487c410209.png?fit=640%2C425&amp;ssl=1" class="aligncenter size-full wp-image-562" src="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/3b117f6d-153f-4df6-a96c-51487c410209.png?resize=640%2C425" alt="3b117f6d-153f-4df6-a96c-51487c410209" srcset="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/3b117f6d-153f-4df6-a96c-51487c410209.png?w=870&amp;ssl=1 870w, https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/3b117f6d-153f-4df6-a96c-51487c410209.png?resize=300%2C199&amp;ssl=1 300w, https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/3b117f6d-153f-4df6-a96c-51487c410209.png?resize=768%2C510&amp;ssl=1 768w, https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/3b117f6d-153f-4df6-a96c-51487c410209.png?resize=770%2C512&amp;ssl=1 770w" sizes="(max-width: 640px) 100vw, 640px" data-recalc-dims="1" /></p>
+<h2>Final touches</h2>
+<p>You may want to make few adjustments. First of all, let&#8217;s change <em>Minimap Camera</em> clear color to light-gray and <em>Clear Flags</em> to <em>Solid Color</em>, so the minimap background will do a better contrast with red and blue spheres.</p>
+<p><img data-attachment-id="563" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/0680218f-0e76-47b6-ad53-944585f89395/" data-orig-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/0680218f-0e76-47b6-ad53-944585f89395.png?fit=344%2C84&amp;ssl=1" data-orig-size="344,84" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="minimap camera background color" data-image-description="" data-medium-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/0680218f-0e76-47b6-ad53-944585f89395.png?fit=300%2C73&amp;ssl=1" data-large-file="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/0680218f-0e76-47b6-ad53-944585f89395.png?fit=344%2C84&amp;ssl=1" class="aligncenter size-full wp-image-563" src="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/0680218f-0e76-47b6-ad53-944585f89395.png?resize=344%2C84" alt="minimap camera background color" srcset="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/0680218f-0e76-47b6-ad53-944585f89395.png?w=344&amp;ssl=1 344w, https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/0680218f-0e76-47b6-ad53-944585f89395.png?resize=300%2C73&amp;ssl=1 300w" sizes="(max-width: 344px) 100vw, 344px" data-recalc-dims="1" /></p>
+<p>Then you can add any other Unity UI element to stick with your minimap. I will add an example label. And here&#8217;s our final result!</p>
+<p><img data-attachment-id="564" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/d41a30b5-be01-4aa6-9e66-db363342f979/" data-orig-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/d41a30b5-be01-4aa6-9e66-db363342f979.png?fit=873%2C581&amp;ssl=1" data-orig-size="873,581" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="minimap final result" data-image-description="" data-medium-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/d41a30b5-be01-4aa6-9e66-db363342f979.png?fit=300%2C200&amp;ssl=1" data-large-file="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/d41a30b5-be01-4aa6-9e66-db363342f979.png?fit=640%2C426&amp;ssl=1" class="aligncenter size-full wp-image-564" src="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/d41a30b5-be01-4aa6-9e66-db363342f979.png?resize=640%2C426" alt="minimap final result" srcset="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/d41a30b5-be01-4aa6-9e66-db363342f979.png?w=873&amp;ssl=1 873w, https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/d41a30b5-be01-4aa6-9e66-db363342f979.png?resize=300%2C200&amp;ssl=1 300w, https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/d41a30b5-be01-4aa6-9e66-db363342f979.png?resize=768%2C511&amp;ssl=1 768w, https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/d41a30b5-be01-4aa6-9e66-db363342f979.png?resize=770%2C512&amp;ssl=1 770w" sizes="(max-width: 640px) 100vw, 640px" data-recalc-dims="1" /></p>
+<p>Minimap is configured in a way that moving the character will update its position. If any other robot will move too, it will be immediately visible.</p>
+<p><img data-attachment-id="565" data-permalink="https://blog.theknightsofunity.com/implementing-minimap-unity/8e744555-ae16-46d8-8b15-46f405ff2290/" data-orig-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/8e744555-ae16-46d8-8b15-46f405ff2290.png?fit=873%2C581&amp;ssl=1" data-orig-size="873,581" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="minimap position change" data-image-description="" data-medium-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/8e744555-ae16-46d8-8b15-46f405ff2290.png?fit=300%2C200&amp;ssl=1" data-large-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/8e744555-ae16-46d8-8b15-46f405ff2290.png?fit=640%2C426&amp;ssl=1" class="aligncenter size-full wp-image-565" src="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/8e744555-ae16-46d8-8b15-46f405ff2290.png?resize=640%2C426" alt="minimap position change" srcset="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/8e744555-ae16-46d8-8b15-46f405ff2290.png?w=873&amp;ssl=1 873w, https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/8e744555-ae16-46d8-8b15-46f405ff2290.png?resize=300%2C200&amp;ssl=1 300w, https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/8e744555-ae16-46d8-8b15-46f405ff2290.png?resize=768%2C511&amp;ssl=1 768w, https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/8e744555-ae16-46d8-8b15-46f405ff2290.png?resize=770%2C512&amp;ssl=1 770w" sizes="(max-width: 640px) 100vw, 640px" data-recalc-dims="1" /></p>
+<p>And this concludes the Unity mini-map tutorial! Feel free to ask any questions you may have in comments. Don&#8217;t forget to subscribe to our newsletter for the latest Unity tips &amp; tricks.</p>
+
+<div id='jp-relatedposts' class='jp-relatedposts' >
+	<h3 class="jp-relatedposts-headline"><em>Related</em></h3>
+</div>
+			</div><!-- .entry-content -->
+			
+	
+	
+		<div class="entry-tags">
+		<a href="https://blog.theknightsofunity.com/tag/graphics/" rel="tag">Graphics</a><a href="https://blog.theknightsofunity.com/tag/gui/" rel="tag">GUI</a><a href="https://blog.theknightsofunity.com/tag/tutorial/" rel="tag">Tutorial</a>	</div>
+	
+</article><!-- #post-## -->
+
+	<nav class="navigation post-navigation" role="navigation">
+		<h2 class="screen-reader-text">Post navigation</h2>
+		<div class="nav-links"><div class="nav-previous"><a href="https://blog.theknightsofunity.com/myths-and-facts-of-unity-game-engine/" rel="prev">Myths and Facts of the Unity Game Engine</a></div><div class="nav-next"><a href="https://blog.theknightsofunity.com/steamworks-and-unity-p2p-multiplayer/" rel="next">Steamworks and Unity &#8211; P2P Multiplayer</a></div></div>
+	</nav>
+<div id="comments" class="comments-area">
+
+			<h2 class="comments-title">
+			10 thoughts on &ldquo;[Tutorial] Implementing a Minimap in Unity&rdquo;		</h2>
+
+		
+		<ol class="comment-list">
+					<li id="comment-1785" class="comment even thread-even depth-1">
+			<article id="div-comment-1785" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+						<img alt='' src='https://secure.gravatar.com/avatar/f8994f5f8f30f4edd41cb3069b732681?s=32&#038;r=g' srcset='https://secure.gravatar.com/avatar/f8994f5f8f30f4edd41cb3069b732681?s=64&#038;r=g 2x' class='avatar avatar-32 photo' height='32' width='32' />						<b class="fn"><a href='http://www.longroadgames.com' rel='external nofollow' class='url'>Bryan Lewis</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://blog.theknightsofunity.com/implementing-minimap-unity/#comment-1785">
+							<time datetime="2016-04-13T02:32:47+00:00">
+								April 13, 2016 at 2:32 am							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>That is really quite a nicely done tutorial.</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-1790" class="comment odd alt thread-odd thread-alt depth-1">
+			<article id="div-comment-1790" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+						<img alt='' src='https://secure.gravatar.com/avatar/cb37f8e7facb513e5dfc5c138ea59310?s=32&#038;r=g' srcset='https://secure.gravatar.com/avatar/cb37f8e7facb513e5dfc5c138ea59310?s=64&#038;r=g 2x' class='avatar avatar-32 photo' height='32' width='32' />						<b class="fn"><a href='http://isfuturebright.com' rel='external nofollow' class='url'>Silvio Carréra</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://blog.theknightsofunity.com/implementing-minimap-unity/#comment-1790">
+							<time datetime="2016-04-13T17:35:27+00:00">
+								April 13, 2016 at 5:35 pm							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Really interesting. Will try it out.</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-1791" class="comment even thread-even depth-1">
+			<article id="div-comment-1791" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+						<img alt='' src='https://secure.gravatar.com/avatar/a9520c41da9b18c6ac6aecbd7064b0af?s=32&#038;r=g' srcset='https://secure.gravatar.com/avatar/a9520c41da9b18c6ac6aecbd7064b0af?s=64&#038;r=g 2x' class='avatar avatar-32 photo' height='32' width='32' />						<b class="fn">Konrad</b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://blog.theknightsofunity.com/implementing-minimap-unity/#comment-1791">
+							<time datetime="2016-04-13T22:17:56+00:00">
+								April 13, 2016 at 10:17 pm							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Thanks man. That&#8217;s great 😉</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-1797" class="comment odd alt thread-odd thread-alt depth-1 parent">
+			<article id="div-comment-1797" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+						<img alt='' src='https://secure.gravatar.com/avatar/c996423d4b7419cefb5a177ed74e6454?s=32&#038;r=g' srcset='https://secure.gravatar.com/avatar/c996423d4b7419cefb5a177ed74e6454?s=64&#038;r=g 2x' class='avatar avatar-32 photo' height='32' width='32' />						<b class="fn"><a href='http://chaoscultgames.com' rel='external nofollow' class='url'>Nevermind</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://blog.theknightsofunity.com/implementing-minimap-unity/#comment-1797">
+							<time datetime="2016-04-14T18:02:39+00:00">
+								April 14, 2016 at 6:02 pm							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>It&#8217;s a nice and simple example of a minimap. But it is also a nice way to render all your game twice and drop FPS by half. At least put a warning  there concerning performance!</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+<ol class="children">
+		<li id="comment-1883" class="comment byuser comment-author-piotrkorzuszek bypostauthor even depth-2">
+			<article id="div-comment-1883" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+						<img alt='' src='https://secure.gravatar.com/avatar/d86a475288785fdcc828515cb092400d?s=32&#038;r=g' srcset='https://secure.gravatar.com/avatar/d86a475288785fdcc828515cb092400d?s=64&#038;r=g 2x' class='avatar avatar-32 photo' height='32' width='32' />						<b class="fn">Piotr Korzuszek</b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://blog.theknightsofunity.com/implementing-minimap-unity/#comment-1883">
+							<time datetime="2016-04-25T14:01:13+00:00">
+								April 25, 2016 at 2:01 pm							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>That&#8217;s not true, nothing here is rendered twice. When you&#8217;re using camera culling masks, only elements visible by specific camera are rendered. Main camera does not see spheres, minimap camera sees only spheres. The effect is very similar as you would render all the objects with only one camera.</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li id="comment-1852" class="pingback odd alt thread-even depth-1">
+			<div class="comment-body">
+				Pingback: <a href='http://gamecreatr.de/unity-minimap-tutorial/' rel='external nofollow' class='url'>Unity Minimap Tutorial - gamecreatr.de</a> 			</div>
+</li><!-- #comment-## -->
+		<li id="comment-2206" class="comment even thread-odd thread-alt depth-1">
+			<article id="div-comment-2206" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+						<img alt='' src='https://secure.gravatar.com/avatar/3961d658868e4c589260dd732356f8dd?s=32&#038;r=g' srcset='https://secure.gravatar.com/avatar/3961d658868e4c589260dd732356f8dd?s=64&#038;r=g 2x' class='avatar avatar-32 photo' height='32' width='32' />						<b class="fn"><a href='http://www.catprog.org/story.html' rel='external nofollow' class='url'>Catprog</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://blog.theknightsofunity.com/implementing-minimap-unity/#comment-2206">
+							<time datetime="2016-05-15T10:42:16+00:00">
+								May 15, 2016 at 10:42 am							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>I might use this for my game even if it is 2d</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-2497" class="comment odd alt thread-even depth-1">
+			<article id="div-comment-2497" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+						<img alt='' src='https://secure.gravatar.com/avatar/5bed2b56685fa0a4f367c949433e7a9b?s=32&#038;r=g' srcset='https://secure.gravatar.com/avatar/5bed2b56685fa0a4f367c949433e7a9b?s=64&#038;r=g 2x' class='avatar avatar-32 photo' height='32' width='32' />						<b class="fn">Ahmet</b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://blog.theknightsofunity.com/implementing-minimap-unity/#comment-2497">
+							<time datetime="2016-06-09T13:20:53+00:00">
+								June 9, 2016 at 1:20 pm							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>It is really great tutorial, thanks a lot!</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-3895" class="comment even thread-odd thread-alt depth-1">
+			<article id="div-comment-3895" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+						<img alt='' src='https://secure.gravatar.com/avatar/bed9fa710f46a7b27dee64f666adc2f2?s=32&#038;r=g' srcset='https://secure.gravatar.com/avatar/bed9fa710f46a7b27dee64f666adc2f2?s=64&#038;r=g 2x' class='avatar avatar-32 photo' height='32' width='32' />						<b class="fn">Glenn</b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://blog.theknightsofunity.com/implementing-minimap-unity/#comment-3895">
+							<time datetime="2016-10-04T07:09:34+00:00">
+								October 4, 2016 at 7:09 am							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Hi, this is great! However, i wonder what if I want to make an interactive minimap, like when you mouse over on the objects on the minimap, it will show something or clicks on the minimap will move the main camera to center the clicking point, what is your suggestions on implementing these features?</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		<li id="comment-6754" class="comment odd alt thread-even depth-1">
+			<article id="div-comment-6754" class="comment-body">
+				<footer class="comment-meta">
+					<div class="comment-author vcard">
+						<img alt='' src='https://secure.gravatar.com/avatar/c56323aaa5ce2318e9525b5754a68f7e?s=32&#038;r=g' srcset='https://secure.gravatar.com/avatar/c56323aaa5ce2318e9525b5754a68f7e?s=64&#038;r=g 2x' class='avatar avatar-32 photo' height='32' width='32' />						<b class="fn"><a href='http://www.clippingpathassociate.com/our-gallery/background-remover/' rel='external nofollow' class='url'>Background Removal Service</a></b> <span class="says">says:</span>					</div><!-- .comment-author -->
+
+					<div class="comment-metadata">
+						<a href="https://blog.theknightsofunity.com/implementing-minimap-unity/#comment-6754">
+							<time datetime="2017-03-14T23:34:35+00:00">
+								March 14, 2017 at 11:34 pm							</time>
+						</a>
+											</div><!-- .comment-metadata -->
+
+									</footer><!-- .comment-meta -->
+
+				<div class="comment-content">
+					<p>Thanks for your amazing tips. It is very helpful for new startup graphics designers. I will be sharing this links to my friends and social media profiles. And I will keep visiting here regularly to know more advance and professional graphics designing tips. Good Luck for your next update.</p>
+				</div><!-- .comment-content -->
+
+							</article><!-- .comment-body -->
+</li><!-- #comment-## -->
+		</ol><!-- .comment-list -->
+
+		
+		<p class="no-comments">Comments are closed.</p>
+	
+</div><!-- #comments -->
+
+		</main><!-- #main -->
+
+		
+		<aside class="sidebar widget-area">
+			
+<aside id="secondary" class="widget-area" role="complementary">
+	<section id="media_image-4" class="widget widget_media_image"><img width="300" height="216" src="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2017/09/Knights-Of-Unity_Sword051.png?fit=300%2C216&amp;ssl=1" class="image wp-image-1262  attachment-medium size-medium" alt="" style="max-width: 100%; height: auto;" srcset="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2017/09/Knights-Of-Unity_Sword051.png?w=800&amp;ssl=1 800w, https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2017/09/Knights-Of-Unity_Sword051.png?resize=300%2C216&amp;ssl=1 300w, https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2017/09/Knights-Of-Unity_Sword051.png?resize=768%2C553&amp;ssl=1 768w, https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2017/09/Knights-Of-Unity_Sword051.png?resize=600%2C432&amp;ssl=1 600w" sizes="(max-width: 300px) 100vw, 300px" data-attachment-id="1262" data-permalink="https://blog.theknightsofunity.com/knights-of-unity_sword051/" data-orig-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2017/09/Knights-Of-Unity_Sword051.png?fit=800%2C576&amp;ssl=1" data-orig-size="800,576" data-comments-opened="0" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Knights-Of-Unity_Sword05(1)" data-image-description="" data-medium-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2017/09/Knights-Of-Unity_Sword051.png?fit=300%2C216&amp;ssl=1" data-large-file="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2017/09/Knights-Of-Unity_Sword051.png?fit=640%2C461&amp;ssl=1" /></section><section id="text-3" class="widget widget_text"><h2 class="widget-title">About Us</h2>			<div class="textwidget"><p><strong>We offer stable, high quality Unity development.</strong></p>
+<p>Are you looking for Unity developers for your game, plugin, simulator or a quick prototype? Search no more! We are here for you!</p>
+</div>
+		</section><section id="newsletterwidget-6" class="widget widget_newsletterwidget"><h2 class="widget-title">NEWSLETTER</h2><div class="tnp tnp-widget"><form method="post" action="https://blog.theknightsofunity.com/?na=s" onsubmit="return newsletter_check(this)">
+
+<input type="hidden" name="nr" value="widget">
+<input type='hidden' name='nl[]' value='0'>
+<div class="tnp-field tnp-field-email"><label>Email</label><input class="tnp-email" type="email" name="ne" required></div>
+<div class="tnp-field tnp-field-button"><input class="tnp-submit" type="submit" value="Subscribe">
+</div>
+</form>
+</div>
+</section><section id="facebook-likebox-2" class="widget widget_facebook_likebox"><h2 class="widget-title"><a href="https://www.facebook.com/TheKnightsofUnity">Like us on Facebook!</a></h2>		<div id="fb-root"></div>
+		<div class="fb-page" data-href="https://www.facebook.com/TheKnightsofUnity" data-width="458"  data-height="432" data-hide-cover="true" data-show-facepile="true" data-show-posts="false">
+		<div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/TheKnightsofUnity"><a href="https://www.facebook.com/TheKnightsofUnity">Like us on Facebook!</a></blockquote></div>
+		</div>
+		</section><section id="categories-7" class="widget widget_categories"><h2 class="widget-title">Categories</h2>		<ul>
+	<li class="cat-item cat-item-5"><a href="https://blog.theknightsofunity.com/category/tips/advanced/" >Advanced</a>
+</li>
+	<li class="cat-item cat-item-60"><a href="https://blog.theknightsofunity.com/category/augmented-reality/" >Augmented Reality</a>
+</li>
+	<li class="cat-item cat-item-3"><a href="https://blog.theknightsofunity.com/category/tips/basics/" >Basics</a>
+</li>
+	<li class="cat-item cat-item-81"><a href="https://blog.theknightsofunity.com/category/business/" >Business</a>
+</li>
+	<li class="cat-item cat-item-41"><a href="https://blog.theknightsofunity.com/category/guide/" >Guide</a>
+</li>
+	<li class="cat-item cat-item-4"><a href="https://blog.theknightsofunity.com/category/tips/intermediate/" >Intermediate</a>
+</li>
+	<li class="cat-item cat-item-77"><a href="https://blog.theknightsofunity.com/category/multiplayer/" >Multiplayer</a>
+</li>
+	<li class="cat-item cat-item-31"><a href="https://blog.theknightsofunity.com/category/other/" >Other</a>
+</li>
+	<li class="cat-item cat-item-26"><a href="https://blog.theknightsofunity.com/category/post-mortem/" >Post Mortem</a>
+</li>
+	<li class="cat-item cat-item-35"><a href="https://blog.theknightsofunity.com/category/review/" >Review</a>
+</li>
+	<li class="cat-item cat-item-78"><a href="https://blog.theknightsofunity.com/category/scythe-digital-edition/" >Scythe: Digital Edition</a>
+</li>
+	<li class="cat-item cat-item-2"><a href="https://blog.theknightsofunity.com/category/tips/" >Tips</a>
+</li>
+	<li class="cat-item cat-item-32"><a href="https://blog.theknightsofunity.com/category/tutorial/" >Tutorial</a>
+</li>
+		</ul>
+</section><section id="top-posts-3" class="widget widget_top-posts"><h2 class="widget-title">TOP POSTS</h2><ul class='widgets-list-layout no-grav'>
+					<li>
+												<a href="https://blog.theknightsofunity.com/unity-vuforia-guide/" title="Unity AR Tutorial: Augmented Reality Game Development with Vuforia" class="bump-view" data-bump-view="tp">
+							<img width="40" height="40" src="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2017/08/header2.png?fit=1200%2C627&#038;ssl=1&#038;resize=40%2C40" class='widgets-list-layout-blavatar' alt="Unity AR Tutorial: Augmented Reality Game Development with Vuforia" data-pin-nopin="true" />
+						</a>
+						<div class="widgets-list-layout-links">
+							<a href="https://blog.theknightsofunity.com/unity-vuforia-guide/" class="bump-view" data-bump-view="tp">
+								Unity AR Tutorial: Augmented Reality Game Development with Vuforia							</a>
+						</div>
+											</li>
+									<li>
+												<a href="https://blog.theknightsofunity.com/using-multiple-unity-cameras-why-this-may-be-important/" title="Understanding the Importance of Using Multiple Cameras in Unity" class="bump-view" data-bump-view="tp">
+							<img width="40" height="40" src="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/01/multipleunitycameras.png?fit=768%2C540&#038;ssl=1&#038;resize=40%2C40" class='widgets-list-layout-blavatar' alt="Understanding the Importance of Using Multiple Cameras in Unity" data-pin-nopin="true" />
+						</a>
+						<div class="widgets-list-layout-links">
+							<a href="https://blog.theknightsofunity.com/using-multiple-unity-cameras-why-this-may-be-important/" class="bump-view" data-bump-view="tp">
+								Understanding the Importance of Using Multiple Cameras in Unity							</a>
+						</div>
+											</li>
+									<li>
+												<a href="https://blog.theknightsofunity.com/7-ways-keep-unity-project-organized/" title="7 Ways to Keep Your Unity Project Organized" class="bump-view" data-bump-view="tp">
+							<img width="40" height="40" src="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/06/logo@2x.png?resize=40%2C40" class='widgets-list-layout-blavatar' alt="7 Ways to Keep Your Unity Project Organized" data-pin-nopin="true" />
+						</a>
+						<div class="widgets-list-layout-links">
+							<a href="https://blog.theknightsofunity.com/7-ways-keep-unity-project-organized/" class="bump-view" data-bump-view="tp">
+								7 Ways to Keep Your Unity Project Organized							</a>
+						</div>
+											</li>
+									<li>
+												<a href="https://blog.theknightsofunity.com/wrong-import-settings-killing-unity-game-part-2/" title="Wrong Import Settings are Killing Your Unity Game [Part 2]" class="bump-view" data-bump-view="tp">
+							<img width="40" height="40" src="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2015/11/a0811c8c-e135-4126-b0c2-e0c170a1ae64.png?resize=40%2C40" class='widgets-list-layout-blavatar' alt="Wrong Import Settings are Killing Your Unity Game [Part 2]" data-pin-nopin="true" />
+						</a>
+						<div class="widgets-list-layout-links">
+							<a href="https://blog.theknightsofunity.com/wrong-import-settings-killing-unity-game-part-2/" class="bump-view" data-bump-view="tp">
+								Wrong Import Settings are Killing Your Unity Game [Part 2]							</a>
+						</div>
+											</li>
+									<li>
+												<a href="https://blog.theknightsofunity.com/implementing-minimap-unity/" title="[Tutorial] Implementing a Minimap in Unity" class="bump-view" data-bump-view="tp">
+							<img width="40" height="40" src="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/04/Minimap-4_1_0.png?resize=40%2C40" class='widgets-list-layout-blavatar' alt="[Tutorial] Implementing a Minimap in Unity" data-pin-nopin="true" />
+						</a>
+						<div class="widgets-list-layout-links">
+							<a href="https://blog.theknightsofunity.com/implementing-minimap-unity/" class="bump-view" data-bump-view="tp">
+								[Tutorial] Implementing a Minimap in Unity							</a>
+						</div>
+											</li>
+									<li>
+												<a href="https://blog.theknightsofunity.com/wrong-import-settings-killing-unity-game-part-1/" title="Wrong Import Settings are Killing Your Unity Game [Part 1]" class="bump-view" data-bump-view="tp">
+							<img width="40" height="40" src="https://i0.wp.com/blog.theknightsofunity.com/wp-content/uploads/2015/11/31433ad9-0fed-4a0f-a8e0-a85803b0d945.png?resize=40%2C40" class='widgets-list-layout-blavatar' alt="Wrong Import Settings are Killing Your Unity Game [Part 1]" data-pin-nopin="true" />
+						</a>
+						<div class="widgets-list-layout-links">
+							<a href="https://blog.theknightsofunity.com/wrong-import-settings-killing-unity-game-part-1/" class="bump-view" data-bump-view="tp">
+								Wrong Import Settings are Killing Your Unity Game [Part 1]							</a>
+						</div>
+											</li>
+									<li>
+												<a href="https://blog.theknightsofunity.com/integrating-unity-game-steamworks/" title="Integrating Unity Games with Steamworks" class="bump-view" data-bump-view="tp">
+							<img width="40" height="40" src="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/03/unitysteamworks.png?fit=560%2C315&#038;ssl=1&#038;resize=40%2C40" class='widgets-list-layout-blavatar' alt="Integrating Unity Games with Steamworks" data-pin-nopin="true" />
+						</a>
+						<div class="widgets-list-layout-links">
+							<a href="https://blog.theknightsofunity.com/integrating-unity-game-steamworks/" class="bump-view" data-bump-view="tp">
+								Integrating Unity Games with Steamworks							</a>
+						</div>
+											</li>
+									<li>
+												<a href="https://blog.theknightsofunity.com/steamworks-and-unity-p2p-multiplayer/" title="Steamworks and Unity - P2P Multiplayer" class="bump-view" data-bump-view="tp">
+							<img width="40" height="40" src="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/05/share_steam_logo-300x300.png?resize=40%2C40" class='widgets-list-layout-blavatar' alt="Steamworks and Unity - P2P Multiplayer" data-pin-nopin="true" />
+						</a>
+						<div class="widgets-list-layout-links">
+							<a href="https://blog.theknightsofunity.com/steamworks-and-unity-p2p-multiplayer/" class="bump-view" data-bump-view="tp">
+								Steamworks and Unity - P2P Multiplayer							</a>
+						</div>
+											</li>
+									<li>
+												<a href="https://blog.theknightsofunity.com/mobile-optimization-batching-unity/" title="Mobile Optimization - Batching in Unity" class="bump-view" data-bump-view="tp">
+							<img width="40" height="40" src="https://i2.wp.com/blog.theknightsofunity.com/wp-content/uploads/2015/10/desktop1.png?resize=40%2C40" class='widgets-list-layout-blavatar' alt="Mobile Optimization - Batching in Unity" data-pin-nopin="true" />
+						</a>
+						<div class="widgets-list-layout-links">
+							<a href="https://blog.theknightsofunity.com/mobile-optimization-batching-unity/" class="bump-view" data-bump-view="tp">
+								Mobile Optimization - Batching in Unity							</a>
+						</div>
+											</li>
+									<li>
+												<a href="https://blog.theknightsofunity.com/forward-vs-deferred-rendering-paths/" title="Choosing Between Forward or Deferred Rendering Paths in Unity" class="bump-view" data-bump-view="tp">
+							<img width="40" height="40" src="https://i1.wp.com/blog.theknightsofunity.com/wp-content/uploads/2016/05/pixel-vs-vertex-lighting.png?resize=40%2C40" class='widgets-list-layout-blavatar' alt="Choosing Between Forward or Deferred Rendering Paths in Unity" data-pin-nopin="true" />
+						</a>
+						<div class="widgets-list-layout-links">
+							<a href="https://blog.theknightsofunity.com/forward-vs-deferred-rendering-paths/" class="bump-view" data-bump-view="tp">
+								Choosing Between Forward or Deferred Rendering Paths in Unity							</a>
+						</div>
+											</li>
+				</ul>
+</section><section id="rss_links-3" class="widget widget_rss_links"><h2 class="widget-title">RSS feed</h2><ul><li><a target="_self" href="https://blog.theknightsofunity.com/feed/" title="Subscribe to Posts">RSS - Posts</a></li></ul>
+</section><section id="mks_author_widget-2" class="widget mks_author_widget"><h2 class="widget-title">Author</h2>
+
+  <h3>Piotr Korzuszek</h3>
+	
+	<div class="mks_autor_link_wrap"><a href="https://blog.theknightsofunity.com/author/piotrkorzuszek/" class="mks_author_link">View all posts</a></div>
+
+</section></aside><!-- #secondary -->
+		</aside><!-- #sidebar -->
+
+		
+	</div><!-- #primary -->
+
+
+	</div><!-- #content -->
+
+	<div id="instagram-footer" class="instagram-footer">
+
+				
+	</div>
+
+	<footer id="colophon" class="site-footer" role="contentinfo">
+
+		<div class="site-info container">
+			This website is not affiliated with, maintained, endorsed, or sponsored by Unity Technologies or any of its affiliates.  This is an independent, unofficial site.  UNITY and the Unity cube logo are registered trademarks in the United States and other countries --All rights reserved.			<br>
+			© The Knights of Unity 2017		</div><!-- .site-info -->
+		
+	</footer><!-- #colophon -->
+</div><!-- #page -->
+
+<script type="text/javascript">
+  _nQc = '89286622';
+  _nQs = 'WordPress-Plugin';
+  _nQsv = '1.3.1';
+  _nQt = new Date().getTime();
+  (function() {
+    var no = document.createElement('script'); no.type = 'text/javascript'; no.async = true;
+    no.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'serve.albacross.com/track.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(no, s);
+  })();
+</script>
+<script type='text/javascript'>function ctSetCookie(c_name, value, def_value){document.cookie = c_name + '=' + escape(value) + '; path=/';}ctSetCookie('ct_checkjs', '744408238', '0');</script>	<div style="display:none">
+	<div class="grofile-hash-map-f8994f5f8f30f4edd41cb3069b732681">
+	</div>
+	<div class="grofile-hash-map-cb37f8e7facb513e5dfc5c138ea59310">
+	</div>
+	<div class="grofile-hash-map-c90297658a5616743d2a7625bab39092">
+	</div>
+	<div class="grofile-hash-map-c996423d4b7419cefb5a177ed74e6454">
+	</div>
+	<div class="grofile-hash-map-d86a475288785fdcc828515cb092400d">
+	</div>
+	<div class="grofile-hash-map-3961d658868e4c589260dd732356f8dd">
+	</div>
+	<div class="grofile-hash-map-5bed2b56685fa0a4f367c949433e7a9b">
+	</div>
+	<div class="grofile-hash-map-bed9fa710f46a7b27dee64f666adc2f2">
+	</div>
+	<div class="grofile-hash-map-c56323aaa5ce2318e9525b5754a68f7e">
+	</div>
+	</div>
+<script>
+    jQuery(document).ready(function () {
+		jQuery.post('https://blog.theknightsofunity.com?ga_action=googleanalytics_get_script', {action: 'googleanalytics_get_script'}, function(response) {
+			var F = new Function ( response );
+			return( F() );
+		});
+    });
+</script><!--[if lte IE 8]>
+<link rel='stylesheet' id='jetpack-carousel-ie8fix-css'  href='https://blog.theknightsofunity.com/wp-content/plugins/jetpack/modules/carousel/jetpack-carousel-ie8fix.css?ver=20121024' type='text/css' media='all' />
+<![endif]-->
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-content/plugins/jetpack/modules/photon/photon.js?ver=20130122'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var ctNocache = {"ajaxurl":"https:\/\/blog.theknightsofunity.com\/wp-admin\/admin-ajax.php","info_flag":"","set_cookies_flag":"1","blog_home":"https:\/\/blog.theknightsofunity.com\/"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-content/plugins/cleantalk-spam-protect/inc/cleantalk_nocache.js?ver=5.72'></script>
+<script type='text/javascript' src='https://s0.wp.com/wp-content/js/devicepx-jetpack.js?ver=201844'></script>
+<script type='text/javascript' src='https://secure.gravatar.com/js/gprofiles.js?ver=2018Octaa'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-content/plugins/jetpack/modules/wpgroho.js?ver=4.9.8'></script>
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-content/themes/kokoro/js/navigation.js?ver=20151215'></script>
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-content/themes/kokoro/js/skip-link-focus-fix.js?ver=20151215'></script>
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-content/themes/kokoro/js/kokoro.js?ver=4.9.8'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var jpfbembed = {"appid":"249643311490","locale":"en_US"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-content/plugins/jetpack/_inc/facebook-embed.js'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var newsletter = {"messages":{"email_error":"The email is not correct","name_error":"The name is not correct","surname_error":"The last name is not correct","privacy_error":"You must accept the privacy statement"},"profile_max":"20"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-content/plugins/newsletter/subscription/validate.js?ver=5.0.1'></script>
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-content/plugins/youtube-embed-plus/scripts/fitvids.min.js?ver=4.9.8'></script>
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-includes/js/wp-embed.min.js?ver=4.9.8'></script>
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-content/plugins/jetpack/_inc/spin.js?ver=1.3'></script>
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-content/plugins/jetpack/_inc/jquery.spin.js?ver=1.3'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var jetpackCarouselStrings = {"widths":[370,700,1000,1200,1400,2000],"is_logged_in":"","lang":"en","ajaxurl":"https:\/\/blog.theknightsofunity.com\/wp-admin\/admin-ajax.php","nonce":"c9b38f1a67","display_exif":"1","display_geo":"1","single_image_gallery":"1","single_image_gallery_media_file":"","background_color":"black","comment":"Comment","post_comment":"Post Comment","write_comment":"Write a Comment...","loading_comments":"Loading Comments...","download_original":"View full size <span class=\"photo-size\">{0}<span class=\"photo-size-times\">\u00d7<\/span>{1}<\/span>","no_comment_text":"Please be sure to submit some text with your comment.","no_comment_email":"Please provide an email address to comment.","no_comment_author":"Please provide your name to comment.","comment_post_error":"Sorry, but there was an error posting your comment. Please try again later.","comment_approved":"Your comment was approved.","comment_unapproved":"Your comment is in moderation.","camera":"Camera","aperture":"Aperture","shutter_speed":"Shutter Speed","focal_length":"Focal Length","copyright":"Copyright","comment_registration":"0","require_name_email":"1","login_url":"https:\/\/blog.theknightsofunity.com\/avalon\/?redirect_to=https%3A%2F%2Fblog.theknightsofunity.com%2Fimplementing-minimap-unity%2F","blog_id":"1","meta_data":["camera","aperture","shutter_speed","focal_length","copyright"],"local_comments_commenting_as":"<fieldset><label for=\"email\">Email (Required)<\/label> <input type=\"text\" name=\"email\" class=\"jp-carousel-comment-form-field jp-carousel-comment-form-text-field\" id=\"jp-carousel-comment-form-email-field\" \/><\/fieldset><fieldset><label for=\"author\">Name (Required)<\/label> <input type=\"text\" name=\"author\" class=\"jp-carousel-comment-form-field jp-carousel-comment-form-text-field\" id=\"jp-carousel-comment-form-author-field\" \/><\/fieldset><fieldset><label for=\"url\">Website<\/label> <input type=\"text\" name=\"url\" class=\"jp-carousel-comment-form-field jp-carousel-comment-form-text-field\" id=\"jp-carousel-comment-form-url-field\" \/><\/fieldset>"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blog.theknightsofunity.com/wp-content/plugins/jetpack/modules/carousel/jetpack-carousel.js?ver=20170209'></script>
+<script type='text/javascript' src='https://stats.wp.com/e-201844.js' async defer></script>
+<script type='text/javascript'>
+	_stq = window._stq || [];
+	_stq.push([ 'view', {v:'ext',j:'1:5.1',blog:'91744806',post:'534',tz:'1',srv:'blog.theknightsofunity.com'} ]);
+	_stq.push([ 'clickTrackerInit', '91744806', '534' ]);
+</script>
+
+</body>
+</html>
